@@ -25,3 +25,4 @@ void towers(int num, char frompeg, char topeg, char auxpeg)
     printf("\nMove disk %d from peg %c to peg %c", num, frompeg, topeg);
     towers(num - 1, auxpeg, topeg, frompeg);
 }
+
