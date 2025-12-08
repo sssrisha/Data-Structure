@@ -1,146 +1,146 @@
+#include <stdio.h>
+#define SIZE 5
 
-#include<stdio.h>
-#define MAX 10
-int deque[MAX];
-int left = -1, right = -1;
-void insert_right();
-void insert_left();
-void delete_right();
-void delete_left();
-void display();
+int deque[SIZE];
+int front = -1, rear = -1;
+
+// -------- Check if FULL --------
+int isFull() {
+    return ((front == (rear + 1) % SIZE));
+}
+
+// -------- Check if EMPTY --------
+int isEmpty() {
+    return (front == -1);
+}
+
+// -------- INSERT FRONT --------
+void insertFront(int value) {
+    if (isFull()) {
+        printf("Deque is FULL!\n");
+        return;
+    }
+
+    if (isEmpty()) {
+        front = rear = 0;
+    } else {
+        front = (front - 1 + SIZE) % SIZE;  // Wrap around backward
+    }
+
+    deque[front] = value;
+}
+
+// -------- INSERT REAR --------
+void insertRear(int value) {
+    if (isFull()) {
+        printf("Deque is FULL!\n");
+        return;
+    }
+
+    if (isEmpty()) {
+        front = rear = 0;
+    } else {
+        rear = (rear + 1) % SIZE;  // Wrap forward
+    }
+
+    deque[rear] = value;
+}
+
+// -------- DELETE FRONT --------
+void deleteFront() {
+    if (isEmpty()) {
+        printf("Deque is EMPTY!\n");
+        return;
+    }
+
+    printf("Deleted: %d\n", deque[front]);
+
+    if (front == rear) { // Only one element
+        front = rear = -1;
+    } else {
+        front = (front + 1) % SIZE;
+    }
+}
+
+// -------- DELETE REAR --------
+void deleteRear() {
+    if (isEmpty()) {
+        printf("Deque is EMPTY!\n");
+        return;
+    }
+
+    printf("Deleted: %d\n", deque[rear]);
+
+    if (front == rear) { // Only one element
+        front = rear = -1;
+    } else {
+        rear = (rear - 1 + SIZE) % SIZE;
+    }
+}
+
+// -------- DISPLAY --------
+void display() {
+    if (isEmpty()) {
+        printf("Deque is EMPTY!\n");
+        return;
+    }
+
+    printf("Deque Elements: ");
+    int i = front;
+
+    while (1) {
+        printf("%d ", deque[i]);
+        if (i == rear) break;
+        i = (i + 1) % SIZE;
+    }
+    printf("\n");
+}
+
+// -------- MAIN MENU --------
 int main() {
-    int choice;
+    int choice, value;
 
-    do {
-        printf("\n----- DOUBLE ENDED QUEUE (DEQUE) -----");
-        printf("\n 1. Insert at right");
-        printf("\n 2. Insert at left");
-        printf("\n 3. Delete from right");
-        printf("\n 4. Delete from left");
-        printf("\n 5. Display");
-        printf("\n 6. Exit");
-        printf("\n--------------------------------------");
-        printf("\nEnter your choice: ");
+    while (1) {
+        printf("\n--- DOUBLE ENDED QUEUE MENU ---\n");
+        printf("1. Insert Front\n");
+        printf("2. Insert Rear\n");
+        printf("3. Delete Front\n");
+        printf("4. Delete Rear\n");
+        printf("5. Display\n");
+        printf("6. Exit\n");
+        printf("Enter choice: ");
         scanf("%d", &choice);
 
         switch (choice) {
             case 1:
-                insert_right();
+                printf("Enter value: ");
+                scanf("%d", &value);
+                insertFront(value);
                 break;
+
             case 2:
-                 insert_left();
-                  break;
+                printf("Enter value: ");
+                scanf("%d", &value);
+                insertRear(value);
+                break;
+
             case 3:
-                 delete_right();
-                 break;
+                deleteFront();
+                break;
+
             case 4:
-                delete_left();
-                 break;
+                deleteRear();
+                break;
+
             case 5:
                 display();
-                 break;
-            case 6: printf("\nExiting program...\n"); break;
-            default: printf("\nInvalid choice! Try again.\n");
+                break;
+
+            case 6:
+                return 0;
+
+            default:
+                printf("Invalid choice!\n");
         }
-    } while (choice != 6);
-
-    return 0;
-}
-
-void insert_right() {
-    int val;
-    if ((left == 0 && right == MAX - 1) || (left == right + 1)) {
-        printf("\nOVERFLOW");
-        return;
     }
-
-    printf("\nEnter the value to be added: ");
-    scanf("%d", &val);
-
-    if (left == -1) {
-        left = 0;
-        right = 0;
-    } else if (right == MAX - 1) {
-        right = 0;
-    } else {
-        right++;
-    }
-
-    deque[right] = val;
-    printf("\nInserted %d at right.", val);
-}
-
-void insert_left() {
-    int val;
-    if ((left == 0 && right == MAX - 1) || (left == right + 1)) {
-        printf("\nOVERFLOW");
-        return;
-    }
-
-    printf("\nEnter the value to be added: ");
-    scanf("%d", &val);
-
-    if (left == -1) {
-        left = 0;
-        right = 0;
-    } else if (left == 0) {
-        left = MAX - 1;
-    } else {
-        left--;
-    }
-
-    deque[left] = val;
-    printf("\nInserted %d at left.", val);
-}
-
-void delete_right() {
-    if (left == -1) {
-        printf("\nUNDERFLOW");
-        return;
-    }
-
-    printf("\nDeleted element from right: %d", deque[right]);
-
-    if (left == right) {
-        left = -1;
-        right = -1;
-    } else if (right == 0) {
-        right = MAX - 1;
-    } else {
-        right--;
-    }
-}
-
-void delete_left() {
-    if (left == -1) {
-        printf("\nUNDERFLOW");
-        return;
-    }
-
-    printf("\nDeleted element from left: %d", deque[left]);
-
-    if (left == right) {
-        left = -1;
-        right = -1;
-    } else if (left == MAX - 1) {
-        left = 0;
-    } else {
-        left++;
-    }
-}
-
-void display() {
-    int i;
-    if (left == -1) {
-        printf("\nDEQUE is empty.");
-        return;
-    }
-
-    printf("\nDEQUE elements: ");
-    i = left;
-    while (i != right) {
-        printf("%d ", deque[i]);
-        i = (i + 1) % MAX;
-    }
-    printf("%d\n", deque[right]);
 }
